@@ -66,7 +66,7 @@ function AuthContextProvider(props) {
             case AuthActionType.SHOW_MODALS:{
                 return setAuth({
                     user: auth.user,
-                    loggedIn: auth.user,
+                    loggedIn: auth.loggedIn,
                     errorMessage: payload
                 })
             }
