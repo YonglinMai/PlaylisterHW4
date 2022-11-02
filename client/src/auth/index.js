@@ -1,5 +1,7 @@
+import { getNativeSelectUtilityClasses } from "@mui/material";
 import React, { createContext, useEffect, useState } from "react";
 import { useHistory } from 'react-router-dom'
+import { MUIAccountErrorModal } from "../components";
 import api from './auth-request-api'
 
 const AuthContext = createContext();
@@ -10,13 +12,16 @@ export const AuthActionType = {
     GET_LOGGED_IN: "GET_LOGGED_IN",
     LOGIN_USER: "LOGIN_USER",
     LOGOUT_USER: "LOGOUT_USER",
-    REGISTER_USER: "REGISTER_USER"
+    REGISTER_USER: "REGISTER_USER",
+    HIDE_MODALS: "HIDE_MODALS",
+    SHOW_MODALS: "SHOW_MODALS"
 }
 
 function AuthContextProvider(props) {
     const [auth, setAuth] = useState({
         user: null,
-        loggedIn: false
+        loggedIn: false,
+        errorMessage: null
     });
     const history = useHistory();
 
@@ -51,48 +56,91 @@ function AuthContextProvider(props) {
                     loggedIn: true
                 })
             }
+            case AuthActionType.HIDE_MODALS:{
+                return setAuth({
+                    user: auth.user,
+                    loggedIn: auth.user,
+                    errorMessage: null
+                })
+            }
+            case AuthActionType.SHOW_MODALS:{
+                return setAuth({
+                    user: auth.user,
+                    loggedIn: auth.user,
+                    errorMessage: payload
+                })
+            }
+
             default:
                 return auth;
         }
     }
 
     auth.getLoggedIn = async function () {
-        const response = await api.getLoggedIn();
-        if (response.status === 200) {
+        try{
+            const response = await api.getLoggedIn();
+            if (response.status === 200) {
+                authReducer({
+                    type: AuthActionType.SET_LOGGED_IN,
+                    payload: {
+                        loggedIn: response.data.loggedIn,
+                        user: response.data.user
+                    }
+                });
+            }
+        }catch(err){
             authReducer({
-                type: AuthActionType.SET_LOGGED_IN,
-                payload: {
-                    loggedIn: response.data.loggedIn,
-                    user: response.data.user
-                }
-            });
+                type: AuthActionType.SHOW_MODALS,
+                payload: err.response.data.errorMessage
+            })
+            history.push("/login");
         }
+        
     }
 
     auth.registerUser = async function(firstName, lastName, email, password, passwordVerify) {
-        const response = await api.registerUser(firstName, lastName, email, password, passwordVerify);      
-        if (response.status === 200) {
+        try{
+        const response = await api.registerUser(firstName, lastName, email, password, passwordVerify);
+            if (response.status === 200) {
+                authReducer({
+                    type: AuthActionType.REGISTER_USER,
+                    payload: {
+                        user: response.data.user
+                    }
+                })
+                history.push("/");
+            }
+        }catch(err){
+            //alert(err.response.data.errorMessage);
             authReducer({
-                type: AuthActionType.REGISTER_USER,
-                payload: {
-                    user: response.data.user
-                }
+                type: AuthActionType.SHOW_MODALS,
+                payload: err.response.data.errorMessage
             })
-            history.push("/");
-        }
-    }
+            history.push("/register");
+        };      
+        
+    };
 
     auth.loginUser = async function(email, password) {
-        const response = await api.loginUser(email, password);
-        if (response.status === 200) {
+        try{
+            const response = await api.loginUser(email, password);
+            if (response.status === 200) {
+                authReducer({
+                    type: AuthActionType.LOGIN_USER,
+                    payload: {
+                        user: response.data.user
+                    }
+                })
+                history.push("/");
+            }
+        }catch(err){
             authReducer({
-                type: AuthActionType.LOGIN_USER,
-                payload: {
-                    user: response.data.user
-                }
+                type: AuthActionType.SHOW_MODALS,
+                payload: err.response.data.errorMessage
             })
-            history.push("/");
+            history.push("/login");
         }
+        
     }
 
     auth.logoutUser = async function() {
@@ -106,6 +154,7 @@ function AuthContextProvider(props) {
         }
     }
 
+
     auth.getUserInitials = function() {
         let initials = "";
         if (auth.user) {
@@ -114,6 +163,13 @@ function AuthContextProvider(props) {
         }
         console.log("user initials: " + initials);
         return initials;
+    }
+
+    auth.hideModal = () => {
+        authReducer({
+            type: AuthActionType.HIDE_MODALS,
+            payload: {}
+        });    
     }
 
     return (
