@@ -317,15 +317,27 @@ function GlobalStoreContextProvider(props) {
         }
         getListToDelete(id);
     }
+    
+    store.unmarkListForDeletion = function (){
+        store.hideModals();
+        storeReducer({
+            type: GlobalStoreActionType.MARK_LIST_FOR_DELETION,
+            payload: {id: null, playlist: null}
+        });
+    }
+
     store.deleteList = function (id) {
         async function processDelete(id) {
             let response = await api.deletePlaylistById(id);
             if (response.data.success) {
                 store.loadIdNamePairs();
                 history.push("/");
+                
             }
+            store.loadIdNamePairs();
         }
         processDelete(id);
+        
     }
     store.deleteMarkedList = function() {
         store.deleteList(store.listIdMarkedForDeletion);
