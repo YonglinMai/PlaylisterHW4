@@ -30,7 +30,8 @@ export const GlobalStoreActionType = {
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
     EDIT_SONG: "EDIT_SONG",
     REMOVE_SONG: "REMOVE_SONG",
-    HIDE_MODALS: "HIDE_MODALS"
+    HIDE_MODALS: "HIDE_MODALS",
+    CLEAR_STORE: "CLEAR_STORE"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -76,7 +77,7 @@ function GlobalStoreContextProvider(props) {
                 return setStore({
                     currentModal : CurrentModal.NONE,
                     idNamePairs: payload.idNamePairs,
-                    currentList: payload.playlist,
+                    currentList: null,
                     currentSongIndex: -1,
                     currentSong: null,
                     newListCounter: store.newListCounter,
@@ -209,6 +210,20 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null
                 });
             }
+            case GlobalStoreActionType.CLEAR_STORE: {
+                return setStore({
+                    currentModal : CurrentModal.NONE,
+                    idNamePairs: [],
+                    currentList: null,
+                    currentSongIndex: -1,
+                    currentSong: null,
+                    newListCounter: 0,
+                    listNameActive: false,
+                    listIdMarkedForDeletion: null,
+                    listMarkedForDeletion: null
+                });
+            }
+
             default:
                 return store;
         }
@@ -261,6 +276,16 @@ function GlobalStoreContextProvider(props) {
         tps.clearAllTransactions();
     }
 
+    store.clearAllTransactions = function(){
+        tps.clearAllTransactions();
+        storeReducer({
+            type: GlobalStoreActionType.CLEAR_STORE,
+            payload: {}
+        });
+    }
+    store.clearTransactions = function(){
+        tps.clearAllTransactions();
+    }
     // THIS FUNCTION CREATES A NEW LIST
     store.createNewList = async function () {
         let newListName = "Untitled" + store.newListCounter;

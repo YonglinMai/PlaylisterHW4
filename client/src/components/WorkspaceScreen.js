@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import SongCard from './SongCard.js'
 import MUIEditSongModal from './MUIEditSongModal'
@@ -16,12 +16,28 @@ function WorkspaceScreen() {
     const { store } = useContext(GlobalStoreContext);
     store.history = useHistory();
     
+    useEffect(() => {
+        if(store.currentList == null){
+            store.history.push('/');
+        }
+    })
     let modalJSX = "";
     if (store.isEditSongModalOpen()) {
         modalJSX = <MUIEditSongModal />;
     }
     else if (store.isRemoveSongModalOpen()) {
         modalJSX = <MUIRemoveSongModal />;
+    }
+    let context = ""
+    if(store.currentList != null){
+        context = store.currentList.songs.map((song, index) => (
+            <SongCard
+                id={'playlist-song-' + (index)}
+                key={'playlist-song-' + (index)}
+                index={index}
+                song={song}
+            />
+        )) 
     }
     return (
         <Box>
@@ -30,14 +46,15 @@ function WorkspaceScreen() {
             sx={{ width: '100%', bgcolor: 'background.paper' }}
         >
             {
-                store.currentList.songs.map((song, index) => (
-                    <SongCard
-                        id={'playlist-song-' + (index)}
-                        key={'playlist-song-' + (index)}
-                        index={index}
-                        song={song}
-                    />
-                ))  
+                context
+                // store.currentList.songs.map((song, index) => (
+                //     <SongCard
+                //         id={'playlist-song-' + (index)}
+                //         key={'playlist-song-' + (index)}
+                //         index={index}
+                //         song={song}
+                //     />
+                // ))  
             }
          </List>            
          { modalJSX }

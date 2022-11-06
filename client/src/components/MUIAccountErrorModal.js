@@ -27,9 +27,10 @@ export default function MUIAccountErrorModal() {
     function handleCloseModal(event) {
         auth.hideModal();
     }
+
     return (
         <Modal
-            open={auth.errorMessage !== null}
+            open={auth.errorMessage != null}
         >
         <Alert
             severity="error"
