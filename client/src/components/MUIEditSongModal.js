@@ -3,6 +3,7 @@ import GlobalStoreContext from '../store';
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
+import { borderRadius } from '@mui/system';
 
 const style = {
     position: 'absolute',
@@ -10,8 +11,10 @@ const style = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 400,
+    height: 200,
     bgcolor: 'background.paper',
     border: '2px solid #000',
+    borderRadius: 5,
     boxShadow: 24,
     p: 4,
 };
