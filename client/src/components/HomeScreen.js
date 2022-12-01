@@ -77,7 +77,7 @@ const HomeScreen = () => {
     let listCard = "";
     if (store) {
         listCard = 
-            <List sx={{ width: '90%', left: '5%', bgcolor: 'background.paper' }}>
+            <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
             {
                 store.idNamePairs.map((pair) => (
                     <ListCard
@@ -92,24 +92,27 @@ const HomeScreen = () => {
     return (
         <div id="playlist-selector">
             <div id="list-selector-heading">
-            <Fab 
-                color="primary" 
-                aria-label="add"
-                id="add-list-button"
-                onClick={handleCreateNewList}
-            >
-                <AddIcon />
-            </Fab>
                 <Typography variant="h2">Your Lists</Typography>
             </div>
             <div id="home-Screen">
-                <div id="tool-bar">
+                <div id="tool-bar"
+                >
                     <Box id="toolbar-button" sx={{transform:"translate(0%, 20%)"}}>
                         <HomeIcon style={styleForButton}></HomeIcon>
                         <Groups2Icon style={styleForButton}></Groups2Icon>
                         <PersonIcon style={styleForButton}></PersonIcon>
                     </Box>
-                    <Box component="form" sx={{transform:"translate(90%, 0%)"}}>
+                    <Box component="form" 
+                    sx={{width: '50%', transform:"translate(20%, 0%)"}}>
+                    <Fab 
+                            sx={{transform:"translate(-10%, 10%)"}}
+                            color="primary" 
+                            aria-label="add"
+                            id="add-list-button"
+                            onClick={handleCreateNewList}
+                        >
+                            <AddIcon />
+                        </Fab>
                         <TextField
                             margin="normal"
                             size="small"
@@ -122,7 +125,7 @@ const HomeScreen = () => {
                         />
                         <SearchIcon style = {styleForButton} sx={{transform:"translate(0%, 10%)"}}></SearchIcon>
                     </Box> 
-                    <Box sx ={{transform:"translate(380%, -20%)"}}>
+                    <Box sx ={{transform:"translate(300%, -10%)"}}>
                         <Typography  variant="string">Sort By </Typography>
                         <SortIcon 
                             sx ={{transform:"translate(0%, 35%)"}} 

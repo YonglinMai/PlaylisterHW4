@@ -40,6 +40,7 @@ function WorkspaceScreen() {
         )) 
     }
     return (
+        
         <Box>
         <List 
             id="playlist-cards" 

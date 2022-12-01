@@ -75,6 +75,7 @@ body {
   width: 100%;
   display: grid;
   grid-auto-flow: row;
+  background-color: white;
 }
 
 #tool-bar{
@@ -94,12 +95,13 @@ body {
 #user-screen{
   left: 0%;
   top: 10%;
-  width: 100%;
+  width: 90%;
   background-color: white;
   display: grid;
   grid-auto-flow: column;
-  grid-template-columns: 4fr 3fr;
+  grid-template-columns: 3fr 2fr;
 }
+
 
 #playlister-list-selector {
   position: absolute;

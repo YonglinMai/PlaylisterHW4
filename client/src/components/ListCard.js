@@ -1,11 +1,15 @@
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { GlobalStoreContext } from '../store'
+import WorkspaceScreen from './WorkspaceScreen';
+import EditToolbar from './EditToolbar'
 import Box from '@mui/material/Box';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import ListItem from '@mui/material/ListItem';
 import TextField from '@mui/material/TextField';
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 
 /*
     This is a card in our list of top 5 lists. It lets select
@@ -17,6 +21,7 @@ import TextField from '@mui/material/TextField';
 function ListCard(props) {
     const { store } = useContext(GlobalStoreContext);
     const [editActive, setEditActive] = useState(false);
+    const [workSpace, setWorkSpace] = useState(false)
     const [text, setText] = useState("");
     const { idNamePair, selected } = props;
 
@@ -31,8 +36,11 @@ function ListCard(props) {
 
             // CHANGE THE CURRENT LIST
             store.setCurrentList(id);
+            setWorkSpace(true)
         }
     }
+
+
 
     function handleToggleEdit(event) {
         event.stopPropagation();
@@ -65,6 +73,11 @@ function ListCard(props) {
         setText(event.target.value);
     }
 
+    function handleCloseList() {
+        store.closeCurrentList();
+        setWorkSpace(false)
+    }
+
     let selectClass = "unselected-list-card";
     if (selected) {
         selectClass = "selected-list-card";
@@ -73,29 +86,92 @@ function ListCard(props) {
     if (store.isListNameEditActive) {
         cardStatus = true;
     }
+
+    let context = ""
+    let editToolBar = ""
+    if (workSpace) {
+        context = <WorkspaceScreen/>;
+        editToolBar = <EditToolbar />;
+    }
+
+    let arrow = 
+    <IconButton
+        disabled = {store.currentList != null}
+        onClick={(event) => {
+            handleLoadList(event, idNamePair._id)
+        }}
+    >
+        <KeyboardDoubleArrowDownIcon
+            style = {{width: '45px', height: '45px', padding: "10"}}
+        />
+    </IconButton>
+    
+
+    if (workSpace){
+        arrow = 
+            <IconButton
+                onClick={(event) => {
+                    handleCloseList(event, idNamePair._id)
+                    }}
+            >
+                <KeyboardDoubleArrowUpIcon
+                        style = {{width: '45px', height: '45px', padding: "10"}}
+                />
+            </IconButton>
+    
+    }
+
     let cardElement =
         <ListItem
             id={idNamePair._id}
             key={idNamePair._id}
-            sx={{ marginTop: '15px', display: 'flex', p: 1 }}
-            style={{ width: '100%', fontSize: '48pt' }}
+            sx={{ marginTop: '15px', display: 'flex', "flexDirection": "column", p: 1 }}
+            style={{ width: '90%', fontSize: '48pt' }}
             button
-            onClick={(event) => {
-                handleLoadList(event, idNamePair._id)
-            }}
+            
         >
-            <Box sx={{ p: 1, flexGrow: 1 }}>{idNamePair.name}</Box>
-            <Box sx={{ p: 1 }}>
-                <IconButton onClick={handleToggleEdit} aria-label='edit'>
-                    <EditIcon style={{fontSize:'48pt'}} />
-                </IconButton>
-            </Box>
-            <Box sx={{ p: 1 }}>
-                <IconButton onClick={(event) => {
+            <Box 
+                sx={{ display: 'flex', "flexDirection": "row"}}
+                style={{ width: '90%', fontSize: '30pt' }}
+            >
+                <Box sx={{ p: 1, flexGrow: 1 }}>{idNamePair.name}</Box>
+                <Box sx={{ p: 1 }}>
+                    <IconButton onClick={handleToggleEdit} aria-label='edit'>
+                    <EditIcon />
+                    </IconButton>
+                </Box>
+                <Box sx={{ p: 1 }}>
+                    <IconButton onClick={(event) => {
                         handleDeleteList(event, idNamePair._id)
-                    }} aria-label='delete'>
-                    <DeleteIcon style={{fontSize:'48pt'}} />
-                </IconButton>
+                        }} aria-label='delete'
+                    >
+                        <DeleteIcon/>
+                    </IconButton>
+                </Box>
+            </Box>
+            <Box 
+                style={{ width: '100%', fontSize: '30pt' }}
+                sx={{ display: 'flex', "flexDirection": "column"}}
+            >
+                <Box
+                    style={{ width: '90%', fontSize: '30pt' }}
+                >
+                    {context}
+                </Box>
+                <Box 
+                    sx={{ display: 'flex', "flexDirection": "row"}}
+                    style={{ width: '90%', fontSize: '30pt' }}
+                >
+                    {editToolBar}
+                    <Box
+                        style={{ width: '50%', fontSize: '30pt' }}
+                        sx={{display: 'flex', "flexDirection": "row", justifyContent:"flex-end"}}
+                    >
+                    {arrow} 
+                    </Box>
+                   
+                </Box>
+                
             </Box>
         </ListItem>
 
@@ -118,6 +194,17 @@ function ListCard(props) {
                 autoFocus
             />
     }
+
+    // let context = 
+    // context = store.currentList.songs.map((song, index) => (
+    //     <SongCard
+    //         id={'playlist-song-' + (index)}
+    //         key={'playlist-song-' + (index)}
+    //         index={index}
+    //         song={song}
+    //     />
+    // )) 
+
     return (
         cardElement
     );
