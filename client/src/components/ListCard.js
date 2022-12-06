@@ -82,6 +82,14 @@ function ListCard(props) {
     function handleDuplicate(){
         
     }
+    
+    function handlelikes(){
+        store.addLike(idNamePair._id);
+    }
+    
+    function handleDislikes(){
+        store.addDislike(idNamePair._id);
+    }
 
     
     let selectClass = "unselected-list-card";
@@ -108,13 +116,17 @@ function ListCard(props) {
         pubDate = "Published: " + idNamePair.pubDate.slice(0,10)
         likesDislike = <Box sx={{ display: 'flex', "flexDirection": "row", transform:"translate(0%, -10%)"}}>
                             <Box>
-                                <IconButton>
+                                <IconButton
+                                    onClick={handlelikes}
+                                >
                                     <ThumbUpIcon/>
                                     {idNamePair.likes}
                                 </IconButton>
                             </Box>
                             <Box>
-                                <IconButton>
+                                <IconButton
+                                    onClick={handleDislikes}
+                                >
                                     <ThumbDownIcon/>
                                     {idNamePair.dislikes}
                                 </IconButton>

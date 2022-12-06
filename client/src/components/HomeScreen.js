@@ -50,6 +50,16 @@ const HomeScreen = () => {
         handleMenuClose();
         store.sortByName();
     }
+
+    const handleSortByLike = () => {
+        handleMenuClose();
+        store.sortByLikes();
+    }
+
+    const handleSortByDislike = () => {
+        handleMenuClose();
+        store.sortByDislikes();
+    }
     const styleForButton = {
         width: '45px',
         height: '45px',
@@ -74,8 +84,8 @@ const HomeScreen = () => {
             <MenuItem onClick = {handleSortByName}>Name (A - Z) </MenuItem>
             <MenuItem>Published Date (Newest) </MenuItem>
             <MenuItem>Listens (High to Low) </MenuItem>
-            <MenuItem>Likes (High to Low)</MenuItem>
-            <MenuItem>Dislikes (High to Low)</MenuItem>
+            <MenuItem onClick={handleSortByLike}>Likes (High to Low)</MenuItem>
+            <MenuItem onClick={handleSortByDislike}>Dislikes (High to Low)</MenuItem>
         </Menu>
       );
 

@@ -570,6 +570,43 @@ function GlobalStoreContextProvider(props) {
         asyncUpdateCurrentList();
     }
 
+    store.addLike = function(id){
+        async function getPlaylistById(id) {
+            const response = await api.getPlaylistById(id);
+            if (response.data.success) {
+                let playlist = response.data.playlist;;
+                playlist.likes += 1;
+
+                async function asyncUpdateList(id) {
+                    const response = await api.updatePlaylistById(id, playlist);
+                    if (response.data.success) {
+                        store.loadIdNamePairs();
+                    }
+                }
+                asyncUpdateList(id);
+            }
+        }
+        getPlaylistById(id)
+        
+    }
+    store.addDislike = function(id){
+        async function getPlaylistById(id) {
+            const response = await api.getPlaylistById(id);
+            if (response.data.success) {
+                let playlist = response.data.playlist;;
+                playlist.dislikes += 1;
+
+                async function asyncUpdateList(id) {
+                    const response = await api.updatePlaylistById(id, playlist);
+                    if (response.data.success) {
+                        store.loadIdNamePairs();
+                    }
+                }
+                asyncUpdateList(id);
+            }
+        }
+        getPlaylistById(id)
+    }
     store.sortByName = function() {
         let playlist = store.idNamePairs.sort((a, b) => (a.name > b.name) ? 1: -1)
         storeReducer({
@@ -589,7 +626,7 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.sortByLikes = function() {
-        let playlist = store.idNamePairs.sort((a, b) => (a.likes > b.likes) ? 1: -1)
+        let playlist = store.idNamePairs.sort((a, b) => (a.likes < b.likes) ? 1: -1)
         storeReducer({
             type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
             payload: playlist
@@ -597,7 +634,7 @@ function GlobalStoreContextProvider(props) {
 
     }
     store.sortByDislikes = function() {
-        let playlist = store.idNamePairs.sort((a, b) => (a.dislikes > b.dislikes) ? 1: -1)
+        let playlist = store.idNamePairs.sort((a, b) => (a.dislikes < b.dislikes) ? 1: -1)
         storeReducer({
             type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
             payload: playlist
