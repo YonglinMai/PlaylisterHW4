@@ -289,7 +289,8 @@ function GlobalStoreContextProvider(props) {
     // THIS FUNCTION CREATES A NEW LIST
     store.createNewList = async function () {
         let newListName = "Untitled" + store.newListCounter;
-        const response = await api.createPlaylist(newListName, [], auth.user.email);
+        console.log("userName " + auth.user)
+        const response = await api.createPlaylist(newListName, [], auth.user.userName, auth.user.email);
         console.log("createNewList response: " + response);
         if (response.status === 201) {
             tps.clearAllTransactions();
@@ -410,7 +411,7 @@ function GlobalStoreContextProvider(props) {
             if (response.data.success) {
                 let playlist = response.data.playlist;
 
-                response = await api.updatePlaylistById(playlist._id, playlist);
+                //response = await api.updatePlaylistById(playlist._id, playlist);
                 if (response.data.success) {
                     storeReducer({
                         type: GlobalStoreActionType.SET_CURRENT_LIST,
@@ -555,6 +556,51 @@ function GlobalStoreContextProvider(props) {
         storeReducer({
             type: GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE,
             payload: null
+        });
+    }
+
+    store.publishList = function(){
+        store.currentList.pubDate = new Date();
+        async function asyncUpdateCurrentList() {
+            const response = await api.updatePlaylistById(store.currentList._id, store.currentList);
+            if (response.data.success) {
+                store.loadIdNamePairs();
+            }
+        }
+        asyncUpdateCurrentList();
+    }
+
+    store.sortByName = function() {
+        let playlist = store.idNamePairs.sort((a, b) => (a.name > b.name) ? 1: -1)
+        storeReducer({
+            type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
+            payload: playlist
+        });
+    }
+    store.sortByDate = function() {
+
+    }
+    store.sortByListens = function() {
+        let playlist = store.idNamePairs.sort((a, b) => (a.listens > b.listens) ? 1: -1)
+        storeReducer({
+            type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
+            payload: playlist
+        });
+    }
+
+    store.sortByLikes = function() {
+        let playlist = store.idNamePairs.sort((a, b) => (a.likes > b.likes) ? 1: -1)
+        storeReducer({
+            type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
+            payload: playlist
+        });
+
+    }
+    store.sortByDislikes = function() {
+        let playlist = store.idNamePairs.sort((a, b) => (a.dislikes > b.dislikes) ? 1: -1)
+        storeReducer({
+            type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
+            payload: playlist
         });
     }
 

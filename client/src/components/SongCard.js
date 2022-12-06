@@ -66,6 +66,7 @@ function SongCard(props) {
             </a>
             <input
                 type="button"
+                disabled = {store.currentList.pubDate}
                 id={"remove-song-" + index}
                 className="list-card-button"
                 value={"\u2715"}

@@ -9,12 +9,17 @@ const Schema = mongoose.Schema
 const playlistSchema = new Schema(
     {
         name: { type: String, required: true },
+        userName: {type: String, required: true},
         ownerEmail: { type: String, required: true },
         songs: { type: [{
             title: String,
             artist: String,
             youTubeId: String
-        }], required: true }
+        }], required: true },
+        pubDate: {type: Date, required: false},
+        likes: {type: Number,  required: false},
+        dislikes: {type: Number, required: false},
+        listens: {type: Number,  required: false}
     },
     { timestamps: true },
 )

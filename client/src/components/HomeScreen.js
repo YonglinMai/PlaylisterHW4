@@ -18,6 +18,7 @@ import SortIcon from '@mui/icons-material/Sort';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import SearchIcon from '@mui/icons-material/Search';
+import YouTubePlayerExample from './YouTubePlayerExample';
 /*
     This React component lists all the top5 lists in the UI.
     
@@ -45,6 +46,10 @@ const HomeScreen = () => {
         setAnchorEl(null);
     };
 
+    const handleSortByName = () => {
+        handleMenuClose();
+        store.sortByName();
+    }
     const styleForButton = {
         width: '45px',
         height: '45px',
@@ -66,7 +71,7 @@ const HomeScreen = () => {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem>Name (A - Z) </MenuItem>
+            <MenuItem onClick = {handleSortByName}>Name (A - Z) </MenuItem>
             <MenuItem>Published Date (Newest) </MenuItem>
             <MenuItem>Listens (High to Low) </MenuItem>
             <MenuItem>Likes (High to Low)</MenuItem>
@@ -90,13 +95,16 @@ const HomeScreen = () => {
             </List>;
     }
     return (
-        <div id="playlist-selector">
-            <div id="list-selector-heading">
+        <Box 
+            id="playlist-selector"
+            sx={{ display: 'flex', "flexDirection": "column"}}
+        >
+            <Box id="list-selector-heading">
                 <Typography variant="h2">Your Lists</Typography>
-            </div>
-            <div id="home-Screen">
-                <div id="tool-bar"
-                >
+            </Box>
+            <Box id="home-Screen">
+                <Box id="tool-bar"
+                    sx={{width: '100%'}}>
                     <Box id="toolbar-button" sx={{transform:"translate(0%, 20%)"}}>
                         <HomeIcon style={styleForButton}></HomeIcon>
                         <Groups2Icon style={styleForButton}></Groups2Icon>
@@ -105,7 +113,7 @@ const HomeScreen = () => {
                     <Box component="form" 
                     sx={{width: '50%', transform:"translate(20%, 0%)"}}>
                     <Fab 
-                            sx={{transform:"translate(-10%, 10%)"}}
+                            sx={{transform:"translate(-20%, 10%)"}}
                             color="primary" 
                             aria-label="add"
                             id="add-list-button"
@@ -123,9 +131,9 @@ const HomeScreen = () => {
                             sx={{width: '75%', height: '10%', left: '0%'}}
                             autoFocus
                         />
-                        <SearchIcon style = {styleForButton} sx={{transform:"translate(0%, 10%)"}}></SearchIcon>
+                        <SearchIcon style = {styleForButton} sx={{transform:"translate(20%, 20%)"}}></SearchIcon>
                     </Box> 
-                    <Box sx ={{transform:"translate(300%, -10%)"}}>
+                    <Box sx ={{transform:"translate(175%, -20%)"}}>
                         <Typography  variant="string">Sort By </Typography>
                         <SortIcon 
                             sx ={{transform:"translate(0%, 35%)"}} 
@@ -134,21 +142,27 @@ const HomeScreen = () => {
                         </SortIcon>
                         {sortMenu}
                     </Box>
-                </div>
-                <div></div>
-                <div id="user-screen">
-                    <div id="list-selector-list">
+                </Box>
+                <Box id="user-screen"
+                    sx={{ display: 'flex', "flexDirection": "row"}}
+                >
+                    <Box id="list-selector-list"
+                    sx={{width: '50%'}}
+                    >
                         {
                         listCard
                         }
                         <MUIDeleteModal />
-                    </div>
-                    <div id="song-player-screen">
-                        testtesttest
-                    </div>
-                </div>
-            </div>
-        </div>)
+                    </Box>
+                    <Box 
+                        id="song-player-screen"
+                        sx={{width: '50%'}}
+                        >
+                        <YouTubePlayerExample/>
+                    </Box>
+                </Box>
+            </Box>
+        </Box>)
 }
 
 export default HomeScreen;

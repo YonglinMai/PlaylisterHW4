@@ -10,6 +10,11 @@ import ListItem from '@mui/material/ListItem';
 import TextField from '@mui/material/TextField';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import PublishIcon from '@mui/icons-material/Publish';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+import Button from '@mui/material/Button';
 
 /*
     This is a card in our list of top 5 lists. It lets select
@@ -21,7 +26,6 @@ import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp
 function ListCard(props) {
     const { store } = useContext(GlobalStoreContext);
     const [editActive, setEditActive] = useState(false);
-    const [workSpace, setWorkSpace] = useState(false)
     const [text, setText] = useState("");
     const { idNamePair, selected } = props;
 
@@ -33,10 +37,8 @@ function ListCard(props) {
                 _id = ("" + _id).substring("list-card-text-".length);
 
             console.log("load " + event.target.id);
-
             // CHANGE THE CURRENT LIST
             store.setCurrentList(id);
-            setWorkSpace(true)
         }
     }
 
@@ -75,9 +77,13 @@ function ListCard(props) {
 
     function handleCloseList() {
         store.closeCurrentList();
-        setWorkSpace(false)
     }
 
+    function handleDuplicate(){
+        
+    }
+
+    
     let selectClass = "unselected-list-card";
     if (selected) {
         selectClass = "selected-list-card";
@@ -89,10 +95,45 @@ function ListCard(props) {
 
     let context = ""
     let editToolBar = ""
-    if (workSpace) {
-        context = <WorkspaceScreen/>;
-        editToolBar = <EditToolbar />;
+    if (store.currentList != null && store.currentList._id == idNamePair._id){
+        context = <WorkspaceScreen/>
+        editToolBar = <EditToolbar/>;  
     }
+
+
+    let pubDate = ""
+    let likesDislike = ""
+    if (idNamePair.pubDate){
+        console.log(idNamePair.pubDate)
+        pubDate = "Published: " + idNamePair.pubDate.slice(0,10)
+        likesDislike = <Box sx={{ display: 'flex', "flexDirection": "row", transform:"translate(0%, -10%)"}}>
+                            <Box>
+                                <IconButton>
+                                    <ThumbUpIcon/>
+                                    {idNamePair.likes}
+                                </IconButton>
+                            </Box>
+                            <Box>
+                                <IconButton>
+                                    <ThumbDownIcon/>
+                                    {idNamePair.dislikes}
+                                </IconButton>
+                            </Box>
+                        </Box>
+    }
+
+    if (idNamePair.pubDate){
+                editToolBar = <Button 
+                                
+                                id='copy-button'
+                                //sx={{transform:"translate(0%, 20%)"}}
+                                style={{ width: 1, height:35 }}
+                                onClick={handleDuplicate}
+                                variant="contained"
+                                >
+                                    <FileCopyIcon/>
+                                </Button>
+            }
 
     let arrow = 
     <IconButton
@@ -107,7 +148,7 @@ function ListCard(props) {
     </IconButton>
     
 
-    if (workSpace){
+    if (store.currentList != null && store.currentList._id == idNamePair._id){
         arrow = 
             <IconButton
                 onClick={(event) => {
@@ -134,37 +175,59 @@ function ListCard(props) {
                 sx={{ display: 'flex', "flexDirection": "row"}}
                 style={{ width: '90%', fontSize: '30pt' }}
             >
-                <Box sx={{ p: 1, flexGrow: 1 }}>{idNamePair.name}</Box>
-                <Box sx={{ p: 1 }}>
-                    <IconButton onClick={handleToggleEdit} aria-label='edit'>
-                    <EditIcon />
-                    </IconButton>
-                </Box>
-                <Box sx={{ p: 1 }}>
-                    <IconButton onClick={(event) => {
-                        handleDeleteList(event, idNamePair._id)
-                        }} aria-label='delete'
+                <Box 
+                    sx={{ p: 1, display: 'flex', "flexDirection": "row"}}
+                    style={{ width: '100%', fontSize: '20pt' }}
+                >
+                    {idNamePair.name}
+                    <Box 
+                        sx={{ p: 1, transform:"translate(0%, -30%)"}}
+                        
                     >
-                        <DeleteIcon/>
-                    </IconButton>
+                        <IconButton 
+                            onClick={handleToggleEdit} aria-label='edit'
+                        >
+                        <EditIcon />
+                        </IconButton>
+                    </Box>
+                    <Box 
+                        sx={{ p: 1, transform:"translate(0%, -30%)"}}
+                    >
+                        <IconButton onClick={(event) => {
+                            handleDeleteList(event, idNamePair._id)
+                            }} aria-label='delete'
+                        >
+                            <DeleteIcon/>
+                        </IconButton>
+                    </Box>
                 </Box>
+                {likesDislike}
+                
+            </Box>
+            <Box
+                sx={{ transform:"translate(7%, 0%)"}}
+                style={{ width: '100%', fontSize: '10pt' }}
+            >
+               By:  {idNamePair.userName}
+               <br/>
+               {pubDate}
             </Box>
             <Box 
                 style={{ width: '100%', fontSize: '30pt' }}
                 sx={{ display: 'flex', "flexDirection": "column"}}
             >
                 <Box
-                    style={{ width: '90%', fontSize: '30pt' }}
+                    style={{ width: '100%', fontSize: '30pt' }}
                 >
                     {context}
                 </Box>
                 <Box 
-                    sx={{ display: 'flex', "flexDirection": "row"}}
-                    style={{ width: '90%', fontSize: '30pt' }}
+                    sx={{ display: 'flex', "flexDirection": "row", transform:"translate(5%, 0%)"}}
+                    style={{ width: '100%', fontSize: '30pt' }}
                 >
                     {editToolBar}
                     <Box
-                        style={{ width: '50%', fontSize: '30pt' }}
+                        style={{ width: '30%', fontSize: '30pt' }}
                         sx={{display: 'flex', "flexDirection": "row", justifyContent:"flex-end"}}
                     >
                     {arrow} 

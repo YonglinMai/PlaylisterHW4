@@ -19,6 +19,9 @@ createPlaylist = (req, res) => {
     }
 
     const playlist = new Playlist(body);
+    playlist.likes = 0;
+    playlist.dislikes = 0;
+    playlist.listens = 0;
     console.log("playlist: " + playlist.toString());
     if (!playlist) {
         return res.status(400).json({ success: false, error: err })
@@ -130,7 +133,12 @@ getPlaylistPairs = async (req, res) => {
                         let list = playlists[key];
                         let pair = {
                             _id: list._id,
-                            name: list.name
+                            name: list.name,
+                            userName: list.userName,
+                            pubDate: list.pubDate,
+                            likes: list.likes,
+                            dislikes: list.dislikes,
+                            listens: list.listens
                         };
                         pairs.push(pair);
                     }
@@ -186,6 +194,11 @@ updatePlaylist = async (req, res) => {
 
                     list.name = body.playlist.name;
                     list.songs = body.playlist.songs;
+                    list.pubDate = body.playlist.pubDate;
+                    list.likes = body.playlist.likes;
+                    list.dislikes = body.playlist.dislikes;
+                    list.listens = body.playlist.listens;
+
                     list
                         .save()
                         .then(() => {
@@ -193,6 +206,10 @@ updatePlaylist = async (req, res) => {
                             return res.status(200).json({
                                 success: true,
                                 id: list._id,
+                                pubDate: list.pubDate,
+                                likes: list.likes,
+                                dislikes: list.dislikes,
+                                listens: list.listens,
                                 message: 'Playlist updated!',
                             })
                         })

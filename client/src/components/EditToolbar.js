@@ -5,7 +5,8 @@ import AddIcon from '@mui/icons-material/Add';
 import RedoIcon from '@mui/icons-material/Redo';
 import UndoIcon from '@mui/icons-material/Undo';
 import CloseIcon from '@mui/icons-material/HighlightOff';
-
+import PublishIcon from '@mui/icons-material/Publish';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
 /*
     This toolbar is a functional React component that
     manages the undo/redo/close buttons.
@@ -24,8 +25,8 @@ function EditToolbar() {
     function handleRedo() {
         store.redo();
     }
-    function handleClose() {
-        store.closeCurrentList();
+    function handlePublish(){
+        store.publishList();
     }
     return (
         <div id="edit-toolbar">
@@ -53,9 +54,21 @@ function EditToolbar() {
             <Button 
                 disabled={!store.canClose() || store.currentModal !== "NONE"}
                 id='close-button'
-                onClick={handleClose}
+                //sx={{transform:"translate(0%, 20%)"}}
+                style={{ width: 1, height:35 }}
+                onClick={handlePublish}
+                variant="contained"
+            >
+                <FileCopyIcon/>
+            </Button>
+            <Button 
+                disabled={!store.canClose() || store.currentModal !== "NONE"}
+                id='publish-button'
+                //sx={{transform:"translate(0%, 20%)"}}
+                style={{ width: 1, height:35 }}
+                onClick={handlePublish}
                 variant="contained">
-                    <CloseIcon />
+                <PublishIcon/>
             </Button>
         </div>
     )

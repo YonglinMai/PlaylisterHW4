@@ -16,11 +16,11 @@ function WorkspaceScreen() {
     const { store } = useContext(GlobalStoreContext);
     store.history = useHistory();
     
-    useEffect(() => {
-        if(store.currentList == null){
-            store.history.push('/');
-        }
-    })
+    // useEffect(() => {
+    //     if(store.currentList == null){
+    //         store.history.push('/');
+    //     }
+    // })
     let modalJSX = "";
     if (store.isEditSongModalOpen()) {
         modalJSX = <MUIEditSongModal />;
