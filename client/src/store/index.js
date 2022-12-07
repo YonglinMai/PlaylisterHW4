@@ -637,7 +637,7 @@ function GlobalStoreContextProvider(props) {
         });
     }
     store.sortByListens = function() {
-        let playlist = store.idNamePairs.sort((a, b) => (a.listens > b.listens) ? 1: -1)
+        let playlist = store.idNamePairs.sort((a, b) => (a.listens < b.listens) ? 1: -1)
         storeReducer({
             type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
             payload: playlist

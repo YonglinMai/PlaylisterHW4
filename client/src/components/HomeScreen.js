@@ -75,6 +75,11 @@ const HomeScreen = () => {
         store.sortByDislikes();
     }
 
+    const handleSortByListens = () => {
+        handleMenuClose();
+        store.sortByListens();
+    }
+
     const handleChange = () => {
         if (value == "videoPlayer"){
             setValue("comments")
@@ -113,7 +118,7 @@ const HomeScreen = () => {
         >
             <MenuItem onClick = {handleSortByName}>Name (A - Z) </MenuItem>
             <MenuItem onClick = {handleSortByDate}>Published Date (Newest) </MenuItem>
-            <MenuItem>Listens (High to Low) </MenuItem>
+            <MenuItem onClick = {handleSortByListens}>Listens (High to Low) </MenuItem>
             <MenuItem onClick={handleSortByLike}>Likes (High to Low)</MenuItem>
             <MenuItem onClick={handleSortByDislike}>Dislikes (High to Low)</MenuItem>
         </Menu>
