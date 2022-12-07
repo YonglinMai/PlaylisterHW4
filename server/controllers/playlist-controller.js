@@ -22,6 +22,7 @@ createPlaylist = (req, res) => {
     playlist.likes = 0;
     playlist.dislikes = 0;
     playlist.listens = 0;
+    playlist.comments = [];
     console.log("playlist: " + playlist.toString());
     if (!playlist) {
         return res.status(400).json({ success: false, error: err })
@@ -149,6 +150,7 @@ getPlaylistPairs = async (req, res) => {
         asyncFindList(user.email);
     }).catch(err => console.log(err))
 }
+
 getPlaylists = async (req, res) => {
     await Playlist.find({}, (err, playlists) => {
         if (err) {
@@ -162,6 +164,7 @@ getPlaylists = async (req, res) => {
         return res.status(200).json({ success: true, data: playlists })
     }).catch(err => console.log(err))
 }
+
 updatePlaylist = async (req, res) => {
     const body = req.body
     console.log("updatePlaylist: " + JSON.stringify(body));
@@ -198,7 +201,7 @@ updatePlaylist = async (req, res) => {
                     list.likes = body.playlist.likes;
                     list.dislikes = body.playlist.dislikes;
                     list.listens = body.playlist.listens;
-
+                    list.comments = body.playlist.comments;
                     list
                         .save()
                         .then(() => {
@@ -210,7 +213,9 @@ updatePlaylist = async (req, res) => {
                                 likes: list.likes,
                                 dislikes: list.dislikes,
                                 listens: list.listens,
-                                message: 'Playlist updated!',
+                                comments: list.comments,
+                                message: 'Playlist updated!'
+                                
                             })
                         })
                         .catch(error => {

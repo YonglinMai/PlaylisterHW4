@@ -42,8 +42,6 @@ function ListCard(props) {
         }
     }
 
-
-
     function handleToggleEdit(event) {
         event.stopPropagation();
         toggleEdit();
@@ -111,9 +109,10 @@ function ListCard(props) {
 
     let pubDate = ""
     let likesDislike = ""
+    let listens = ""
     if (idNamePair.pubDate){
-        console.log(idNamePair.pubDate)
         pubDate = "Published: " + idNamePair.pubDate.slice(0,10)
+        listens = "Listens: " + idNamePair.listens
         likesDislike = <Box sx={{ display: 'flex', "flexDirection": "row", transform:"translate(0%, -10%)"}}>
                             <Box>
                                 <IconButton
@@ -197,7 +196,9 @@ function ListCard(props) {
                         
                     >
                         <IconButton 
-                            onClick={handleToggleEdit} aria-label='edit'
+                            onClick={handleToggleEdit} 
+                            disabled = {idNamePair.pubDate}
+                            aria-label='edit'
                         >
                         <EditIcon />
                         </IconButton>
@@ -223,6 +224,8 @@ function ListCard(props) {
                By:  {idNamePair.userName}
                <br/>
                {pubDate}
+               <br/>
+               {listens}
             </Box>
             <Box 
                 style={{ width: '100%', fontSize: '30pt' }}

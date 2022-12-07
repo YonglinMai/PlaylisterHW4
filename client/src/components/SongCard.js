@@ -38,7 +38,7 @@ function SongCard(props) {
     }
     function handleClick(event) {
         // DOUBLE CLICK IS FOR SONG EDITING
-        if (event.detail === 2) {
+        if (event.detail === 2 && (store.currentList != null && !store.currentList.pubDate)) {
             store.showEditSongModal(index, song);
         }
     }
