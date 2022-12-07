@@ -19,6 +19,13 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import SearchIcon from '@mui/icons-material/Search';
 import YouTubePlayerExample from './YouTubePlayerExample';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import TabPanel from '@mui/lab/TabPanel';
+import TabContext  from '@mui/lab/TabContext';
+import TabList  from '@mui/lab/TabList';
+import Comments from './Comments';
+
 /*
     This React component lists all the top5 lists in the UI.
     
@@ -27,6 +34,8 @@ import YouTubePlayerExample from './YouTubePlayerExample';
 const HomeScreen = () => {
     const { store } = useContext(GlobalStoreContext);
     const [anchorEl, setAnchorEl] = useState(null);
+    const [value, setValue] = useState('videoPlayer')
+    const [text, setText] = useState("")
     const isMenuOpen = Boolean(anchorEl);
 
     useEffect(() => {
@@ -51,6 +60,11 @@ const HomeScreen = () => {
         store.sortByName();
     }
 
+    const handleSortByDate = () => {
+        handleMenuClose();
+        store.sortByDate();
+    }
+
     const handleSortByLike = () => {
         handleMenuClose();
         store.sortByLikes();
@@ -59,6 +73,22 @@ const HomeScreen = () => {
     const handleSortByDislike = () => {
         handleMenuClose();
         store.sortByDislikes();
+    }
+
+    const handleChange = () => {
+        if (value == "videoPlayer"){
+            setValue("comments")
+        }else{
+            setValue("videoPlayer")
+        }
+    }
+
+    const handleSearch = () => {
+        store.searchList(text);
+    }
+
+    const handleUpdateText = (event) => {
+        setText(event.target.value)
     }
     const styleForButton = {
         width: '45px',
@@ -82,7 +112,7 @@ const HomeScreen = () => {
             onClose={handleMenuClose}
         >
             <MenuItem onClick = {handleSortByName}>Name (A - Z) </MenuItem>
-            <MenuItem>Published Date (Newest) </MenuItem>
+            <MenuItem onClick = {handleSortByDate}>Published Date (Newest) </MenuItem>
             <MenuItem>Listens (High to Low) </MenuItem>
             <MenuItem onClick={handleSortByLike}>Likes (High to Low)</MenuItem>
             <MenuItem onClick={handleSortByDislike}>Dislikes (High to Low)</MenuItem>
@@ -104,6 +134,7 @@ const HomeScreen = () => {
             }
             </List>;
     }
+
     return (
         <Box 
             id="playlist-selector"
@@ -116,9 +147,16 @@ const HomeScreen = () => {
                 <Box id="tool-bar"
                     sx={{width: '100%'}}>
                     <Box id="toolbar-button" sx={{transform:"translate(0%, 20%)"}}>
-                        <HomeIcon style={styleForButton}></HomeIcon>
-                        <Groups2Icon style={styleForButton}></Groups2Icon>
-                        <PersonIcon style={styleForButton}></PersonIcon>
+                        <IconButton>
+                            <HomeIcon style={styleForButton}></HomeIcon>
+                        </IconButton>
+                        <IconButton>
+                            <Groups2Icon style={styleForButton}></Groups2Icon>
+                        </IconButton>
+                        <IconButton>
+                            <PersonIcon style={styleForButton}></PersonIcon>
+                        </IconButton>
+                        
                     </Box>
                     <Box component="form" 
                     sx={{width: '50%', transform:"translate(20%, 0%)"}}>
@@ -138,10 +176,14 @@ const HomeScreen = () => {
                             label="search"
                             name="search"
                             autoComplete="search"
+                            onChange={handleUpdateText}
                             sx={{width: '75%', height: '10%', left: '0%'}}
                             autoFocus
                         />
-                        <SearchIcon style = {styleForButton} sx={{transform:"translate(20%, 20%)"}}></SearchIcon>
+                        <SearchIcon 
+                            style = {styleForButton} 
+                            sx={{transform:"translate(20%, 20%)"}}
+                            onClick = {handleSearch}></SearchIcon>
                     </Box> 
                     <Box sx ={{transform:"translate(175%, -20%)"}}>
                         <Typography  variant="string">Sort By </Typography>
@@ -167,12 +209,25 @@ const HomeScreen = () => {
                     <Box 
                         id="song-player-screen"
                         sx={{width: '50%'}}
-                        >
-                        <YouTubePlayerExample/>
-                    </Box>
+                    >
+                        <TabContext value = {value}>
+                            <TabList  onChange={handleChange} aria-label="basic tabs example">
+                                    <Tab value="videoPlayer"label="Video Player" />
+                                    <Tab value="comments" label="Comment"/>
+                                </TabList>
+                                <TabPanel value="videoPlayer" index={0}>
+                                    <YouTubePlayerExample/>
+                                </TabPanel>
+                                <TabPanel value="comments" index={1}>
+                                    <Comments/>
+                                </TabPanel>
+                        </TabContext>
+                            
+                       </Box> 
                 </Box>
             </Box>
-        </Box>)
+        </Box>
+    )
 }
 
 export default HomeScreen;
