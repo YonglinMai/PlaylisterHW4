@@ -133,7 +133,7 @@ function ListCard(props) {
                         </Box>
     }
 
-    if (idNamePair.pubDate){
+    if (idNamePair.pubDate && (store.currentList != null && store.currentList._id == idNamePair._id)){
                 editToolBar = <Button 
                                 
                                 id='copy-button'
