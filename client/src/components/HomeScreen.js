@@ -98,13 +98,35 @@ const HomeScreen = () => {
     }
 
     const handleKeyPress = (event) => {
-
         event.stopPropagation()
         if (event.code === "Enter" ) {
-            event.preventDefault()
-            console.log(text)
-            handleSearch(text);
+            event.preventDefault();
+            if(page == "SearchByName" && text){
+                handleSearch(text);
+            }
+            else if(page == "SearchByUser" && text){
+                store.searchListByUser(text)
+            }
+            else{
+                store.searchOwnedList(text)
+            }
+
         }
+    }
+
+    const handleHome = (event) => {
+        setPage("home");
+        store.loadIdNamePairs();
+    }
+
+    const handleSearchByName = (event) => {
+        setPage("SearchByName");
+        store.clearAllTransactions();
+    }
+
+    const handleSearchByUser = (event) => {
+        setPage("SearchByUser");
+        store.clearAllTransactions();
     }
 
     const styleForButton = {
@@ -164,13 +186,19 @@ const HomeScreen = () => {
                 <Box id="tool-bar"
                     sx={{width: '100%'}}>
                     <Box id="toolbar-button" sx={{transform:"translate(0%, 20%)"}}>
-                        <IconButton>
+                        <IconButton
+                            onClick = {handleHome}
+                        >
                             <HomeIcon style={styleForButton}></HomeIcon>
                         </IconButton>
-                        <IconButton>
+                        <IconButton
+                            onClick = {handleSearchByName}
+                        >
                             <Groups2Icon style={styleForButton}></Groups2Icon>
                         </IconButton>
-                        <IconButton>
+                        <IconButton
+                            onClick = {handleSearchByUser}
+                        >
                             <PersonIcon style={styleForButton}></PersonIcon>
                         </IconButton>
                         

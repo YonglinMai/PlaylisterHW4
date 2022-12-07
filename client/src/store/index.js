@@ -593,7 +593,7 @@ function GlobalStoreContextProvider(props) {
                 playlist.likes += 1;
 
                 async function asyncUpdateList(id) {
-                    const response = await api.updatePlaylistById(id, playlist);
+                    const response = await api.updatePublishedPlaylist(id, playlist);
                     if (response.data.success) {
                         storeReducer({
                             type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
@@ -615,7 +615,7 @@ function GlobalStoreContextProvider(props) {
                 playlist.dislikes += 1;
 
                 async function asyncUpdateList(id) {
-                    const response = await api.updatePlaylistById(id, playlist);
+                    const response = await api.updatePublishedPlaylist(id, playlist);
                     if (response.data.success) {
                         store.loadIdNamePairs();
                     }
@@ -646,7 +646,7 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.sortByName = function() {
-        let playlist = store.idNamePairs.sort((a, b) => (a.name > b.name) ? 1: -1)
+        let playlist = store.idNamePairs.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1: -1)
         storeReducer({
             type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
             payload: playlist
@@ -686,7 +686,7 @@ function GlobalStoreContextProvider(props) {
     store.addComment = function(user, text){
         store.currentList.comments.push({user: user, comments: text})
                 async function asyncUpdateList() {
-                    const response = await api.updatePlaylistById(store.currentList._id, store.currentList);
+                    const response = await api.updatePublishedPlaylist(store.currentList._id, store.currentList);
                     if (response.data.success) {
                         store.setCurrentList(store.currentList._id);
                     }
@@ -695,12 +695,13 @@ function GlobalStoreContextProvider(props) {
     }
 
     let result = ""
-    store.searchList = function(text){
+
+    store.searchOwnedList = function(text){
         async function asyncGetLists(text) {
-            const response = await api.getAllPlaylists();
+            const response = await api.getPlaylistPairs()
             if (response.data.success) {
-                let playlist = response.data.data;
-                let playlistPair = playlist.filter((list) => (list.name.includes(text) && list.pubDate != undefined));
+                let playlist = response.data.idNamePairs;
+                let playlistPair = playlist.filter((list) => (list.name.toLowerCase().includes(text.toLowerCase())));
                 storeReducer({
                     type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
                     payload: playlistPair
@@ -712,12 +713,29 @@ function GlobalStoreContextProvider(props) {
         result = store.loadIdNamePairs
     }
 
-    store.searchListByName = function(text){
+    store.searchList = function(text){
         async function asyncGetLists(text) {
             const response = await api.getAllPlaylists();
             if (response.data.success) {
                 let playlist = response.data.data;
-                let playlistPair = playlist.filter((list) => (list.userName.includes(text) && list.pubDate != undefined));
+                let playlistPair = playlist.filter((list) => (list.name.toLowerCase().includes(text.toLowerCase()) && list.pubDate != undefined));
+                storeReducer({
+                    type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
+                    payload: playlistPair
+                });
+            }
+        }
+        asyncGetLists(text);
+        console.log(store.loadIdNamePairs)
+        result = store.loadIdNamePairs
+    }
+
+    store.searchListByUser = function(text){
+        async function asyncGetLists(text) {
+            const response = await api.getAllPlaylists();
+            if (response.data.success) {
+                let playlist = response.data.data;
+                let playlistPair = playlist.filter((list) => (list.userName.toLowerCase().includes(text.toLowerCase()) && list.pubDate != undefined));
                 storeReducer({
                     type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
                     payload: playlistPair

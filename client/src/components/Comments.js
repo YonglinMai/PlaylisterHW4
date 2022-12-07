@@ -9,6 +9,8 @@ import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
+import Button from '@mui/material/Button';
+
 
 
 
@@ -18,6 +20,11 @@ function Comments() {
     const [text, setText] = useState("")
     let context = "";
 
+    const handleSearchUser = (event) => {
+        console.log(event.target.value)
+        store.searchListByUser(event.target.value)
+    }
+
     if(store.currentList != null && store.currentList.comments ){
         console.log(store.currentList.comments)
         context = store.currentList.comments.map(obj => (
@@ -25,13 +32,17 @@ function Comments() {
                 <Box
                     sx={{display: 'flex', "flexDirection": "column", p: 1 }}
                 >
-                    <Box>By: {obj.user}</Box>
+                    <Button
+                        onClick = {handleSearchUser}
+                    >By: {obj.user}</Button>
                     <Box>{obj.comments}</Box>
                 </Box>
                 
             </ListItem>
         )) 
     }
+
+    
     function handleUpdateText(event) {
         setText(event.target.value);
     }

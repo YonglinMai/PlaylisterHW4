@@ -96,7 +96,7 @@ getPlaylistById = async (req, res) => {
             await User.findOne({ email: list.ownerEmail }, (err, user) => {
                 console.log("user._id: " + user._id);
                 console.log("req.userId: " + req.userId);
-                if (user._id == req.userId) {
+                if (user._id == req.userId || list.pubDate != undefined) {
                     console.log("correct user!");
                     return res.status(200).json({ success: true, playlist: list })
                 }
@@ -109,6 +109,20 @@ getPlaylistById = async (req, res) => {
         asyncFindUser(list);
     }).catch(err => console.log(err))
 }
+
+// getPublishedPlaylistById = async (req, res) => {
+//     console.log("Find Playlist with id: " + JSON.stringify(req.params.id));
+
+//     await Playlist.findById({ _id: req.params.id }, (err, list) => {
+//         if (err) {
+//             return res.status(400).json({ success: false, error: err });
+//         }
+//         console.log("Found list: " + JSON.stringify(list));
+
+//         // DOES THIS LIST BELONG TO THIS USER?
+//     }).catch(err => console.log(err))
+// }
+
 getPlaylistPairs = async (req, res) => {
     console.log("getPlaylistPairs");
     await User.findOne({ _id: req.userId }, (err, user) => {
@@ -235,7 +249,109 @@ updatePlaylist = async (req, res) => {
         asyncFindUser(playlist);
     })
 }
+
+updatePublishedPlaylist = async (req, res) => {
+    const body = req.body
+    console.log("updatePlaylist: " + JSON.stringify(body));
+    console.log("req.body.name: " + req.body.name);
+
+    if (!body) {
+        return res.status(400).json({
+            success: false,
+            error: 'You must provide a body to update',
+        })
+    }
+
+    Playlist.findOne({ _id: req.params.id }, (err, playlist) => {
+        console.log("playlist found: " + JSON.stringify(playlist));
+        if (err) {
+            return res.status(404).json({
+                err,
+                message: 'Playlist not found!',
+            })
+        }
+
+        playlist.name = body.playlist.name;
+        playlist.songs = body.playlist.songs;
+        playlist.pubDate = body.playlist.pubDate;
+        playlist.likes = body.playlist.likes;
+        playlist.dislikes = body.playlist.dislikes;
+        playlist.listens = body.playlist.listens;
+        playlist.comments = body.playlist.comments;
+        playlist
+            .save()
+            .then(() => {
+                console.log("SUCCESS!!!");
+                return res.status(200).json({
+                    success: true,
+                    id: playlist._id,
+                    pubDate: playlist.pubDate,
+                    likes: playlist.likes,
+                    dislikes: playlist.dislikes,
+                    listens: playlist.listens,
+                    comments: playlist.comments,
+                    message: 'Playlist updated!'
+                                            
+                })
+            })
+            .catch(error => {
+                console.log("FAILURE: " + JSON.stringify(error));
+                return res.status(404).json({
+                    error,
+                    message: 'Playlist not updated!',
+                })
+            })
+        // DOES THIS LIST BELONG TO THIS USER?
+        // async function asyncFindUser(list) {
+        //     await User.findOne({ email: list.ownerEmail }, (err, user) => {
+        //         console.log("user._id: " + user._id);
+        //         console.log("req.userId: " + req.userId);
+        //         if (user._id == req.userId) {
+        //             console.log("correct user!");
+        //             console.log("req.body.name: " + req.body.name);
+
+        //             list.name = body.playlist.name;
+        //             list.songs = body.playlist.songs;
+        //             list.pubDate = body.playlist.pubDate;
+        //             list.likes = body.playlist.likes;
+        //             list.dislikes = body.playlist.dislikes;
+        //             list.listens = body.playlist.listens;
+        //             list.comments = body.playlist.comments;
+        //             list
+        //                 .save()
+        //                 .then(() => {
+        //                     console.log("SUCCESS!!!");
+        //                     return res.status(200).json({
+        //                         success: true,
+        //                         id: list._id,
+        //                         pubDate: list.pubDate,
+        //                         likes: list.likes,
+        //                         dislikes: list.dislikes,
+        //                         listens: list.listens,
+        //                         comments: list.comments,
+        //                         message: 'Playlist updated!'
+                                
+        //                     })
+        //                 })
+        //                 .catch(error => {
+        //                     console.log("FAILURE: " + JSON.stringify(error));
+        //                     return res.status(404).json({
+        //                         error,
+        //                         message: 'Playlist not updated!',
+        //                     })
+        //                 })
+        //         }
+        //         else {
+        //             console.log("incorrect user!");
+        //             return res.status(400).json({ success: false, description: "authentication error" });
+        //         }
+        //     });
+        // }
+        // asyncFindUser(playlist);
+    })
+}
 module.exports = {
+    updatePublishedPlaylist,
     createPlaylist,
     deletePlaylist,
     getPlaylistById,
