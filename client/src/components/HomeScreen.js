@@ -37,6 +37,7 @@ const HomeScreen = () => {
     const [value, setValue] = useState('videoPlayer')
     const [text, setText] = useState("")
     const isMenuOpen = Boolean(anchorEl);
+    const [page, setPage] = useState("home")
 
     useEffect(() => {
         store.loadIdNamePairs();
@@ -88,13 +89,24 @@ const HomeScreen = () => {
         }
     }
 
-    const handleSearch = () => {
+    const handleSearch = (event) => {
         store.searchList(text);
     }
 
     const handleUpdateText = (event) => {
         setText(event.target.value)
     }
+
+    const handleKeyPress = (event) => {
+
+        event.stopPropagation()
+        if (event.code === "Enter" ) {
+            event.preventDefault()
+            console.log(text)
+            handleSearch(text);
+        }
+    }
+
     const styleForButton = {
         width: '45px',
         height: '45px',
@@ -174,21 +186,22 @@ const HomeScreen = () => {
                         >
                             <AddIcon />
                         </Fab>
-                        <TextField
-                            margin="normal"
-                            size="small"
-                            id="search-textfield"
-                            label="search"
-                            name="search"
+                        <input
+                            // margin="normal"
+                            // size="small"
+                            // id="search-textfield"
+                            // label="search"
+                            // name="search"
                             autoComplete="search"
                             onChange={handleUpdateText}
+                            onKeyPress={handleKeyPress}        
                             sx={{width: '75%', height: '10%', left: '0%'}}
-                            autoFocus
+
                         />
-                        <SearchIcon 
+                        {/* <SearchIcon 
                             style = {styleForButton} 
                             sx={{transform:"translate(20%, 20%)"}}
-                            onClick = {handleSearch}></SearchIcon>
+                            onClick = {handleSearch}></SearchIcon> */}
                     </Box> 
                     <Box sx ={{transform:"translate(175%, -20%)"}}>
                         <Typography  variant="string">Sort By </Typography>

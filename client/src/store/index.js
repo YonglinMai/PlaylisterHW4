@@ -303,6 +303,26 @@ function GlobalStoreContextProvider(props) {
             console.log("API FAILED TO CREATE A NEW LIST");
         }
     }
+    store.duplicateList = async function () {
+        let newListName = "Copy of " + store.currentList.name;
+        const response = await api.createPlaylist(newListName, store.currentList.songs, auth.user.userName, auth.user.email);
+        console.log("createNewList response: " + response);
+        if (response.status === 201) {
+            tps.clearAllTransactions();
+            let newList = response.data.playlist;
+            storeReducer({
+                type: GlobalStoreActionType.CREATE_NEW_LIST,
+                payload: newList
+            }
+            );
+            store.loadIdNamePairs();
+            // IF IT'S A VALID LIST THEN LET'S START EDITING IT
+            //history.push("/playlist/" + newList._id);
+        }
+        else {
+            console.log("API FAILED TO CREATE A NEW LIST");
+        }
+    }
 
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
     store.loadIdNamePairs = function () {
@@ -575,7 +595,10 @@ function GlobalStoreContextProvider(props) {
                 async function asyncUpdateList(id) {
                     const response = await api.updatePlaylistById(id, playlist);
                     if (response.data.success) {
-                        store.loadIdNamePairs();
+                        storeReducer({
+                            type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
+                            payload: store.idNamePairs
+                        });
                     }
                 }
                 asyncUpdateList(id);
@@ -671,12 +694,13 @@ function GlobalStoreContextProvider(props) {
                 asyncUpdateList();
     }
 
+    let result = ""
     store.searchList = function(text){
         async function asyncGetLists(text) {
-            const response = await api.getPlaylists();
+            const response = await api.getAllPlaylists();
             if (response.data.success) {
-                let playlist = response.data.playlist;
-                let playlistPair = playlist.filter((list) => (list.name.includes(text))).filter((list) => (list.pubDate))
+                let playlist = response.data.data;
+                let playlistPair = playlist.filter((list) => (list.name.includes(text) && list.pubDate != undefined));
                 storeReducer({
                     type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
                     payload: playlistPair
@@ -685,7 +709,26 @@ function GlobalStoreContextProvider(props) {
         }
         asyncGetLists(text);
         console.log(store.loadIdNamePairs)
+        result = store.loadIdNamePairs
     }
+
+    store.searchListByName = function(text){
+        async function asyncGetLists(text) {
+            const response = await api.getAllPlaylists();
+            if (response.data.success) {
+                let playlist = response.data.data;
+                let playlistPair = playlist.filter((list) => (list.userName.includes(text) && list.pubDate != undefined));
+                storeReducer({
+                    type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
+                    payload: playlistPair
+                });
+            }
+        }
+        asyncGetLists(text);
+        console.log(store.loadIdNamePairs)
+        result = store.loadIdNamePairs
+    }
+
 
     return (
         <GlobalStoreContext.Provider value={{

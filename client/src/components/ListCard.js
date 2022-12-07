@@ -78,7 +78,7 @@ function ListCard(props) {
     }
 
     function handleDuplicate(){
-        
+        store.duplicateList();
     }
     
     function handlelikes(){

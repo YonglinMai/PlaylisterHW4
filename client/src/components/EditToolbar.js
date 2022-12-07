@@ -28,6 +28,11 @@ function EditToolbar() {
     function handlePublish(){
         store.publishList();
     }
+
+    function handleDuplicate(){
+        store.duplicateList();
+    }
+
     return (
         <div id="edit-toolbar">
             <Button
@@ -56,7 +61,7 @@ function EditToolbar() {
                 id='close-button'
                 //sx={{transform:"translate(0%, 20%)"}}
                 style={{ width: 1, height:35 }}
-                onClick={handlePublish}
+                onClick={handleDuplicate}
                 variant="contained"
             >
                 <FileCopyIcon/>
