@@ -65,7 +65,7 @@ export default function YouTubePlayerExample(props) {
     // THIS FUNCTION LOADS THE CURRENT SONG INTO
     // THE PLAYER AND PLAYS IT
     function loadAndPlayCurrentSong(player) {
-        if(currentSong > playlist.length){
+        if(currentSong > playlist.length || currentSong < 0 ){
             setCurrentSong(0)
         }
         let song = playlist[currentSong];
@@ -82,7 +82,10 @@ export default function YouTubePlayerExample(props) {
     }
 
     function decSong() {
-        setCurrentSong((currentSong - 1) % playlist.length);
+        if (currentSong > 0){
+             setCurrentSong((currentSong - 1) % playlist.length);
+        }
+       
     }
 
     let player;

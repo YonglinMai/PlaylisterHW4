@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
+import AuthContext from '../auth'
 import { GlobalStoreContext } from '../store'
 import WorkspaceScreen from './WorkspaceScreen';
 import EditToolbar from './EditToolbar'
@@ -25,6 +26,7 @@ import Button from '@mui/material/Button';
 */
 function ListCard(props) {
     const { store } = useContext(GlobalStoreContext);
+    const {auth}  = useContext(AuthContext)
     const [editActive, setEditActive] = useState(false);
     const [text, setText] = useState("");
     const { idNamePair, selected } = props;
@@ -87,6 +89,10 @@ function ListCard(props) {
     
     function handleDislikes(){
         store.addDislike(idNamePair._id);
+    }
+
+    function handleSearch(){
+        store.searchListByUser(idNamePair.userName);
     }
 
     
@@ -206,7 +212,9 @@ function ListCard(props) {
                     <Box 
                         sx={{ p: 1, transform:"translate(0%, -30%)"}}
                     >
-                        <IconButton onClick={(event) => {
+                        <IconButton 
+                            disabled = {auth.user.userName != idNamePair.userName}
+                            onClick={(event) => {
                             handleDeleteList(event, idNamePair._id)
                             }} aria-label='delete'
                         >
@@ -221,7 +229,7 @@ function ListCard(props) {
                 sx={{ transform:"translate(7%, 0%)"}}
                 style={{ width: '100%', fontSize: '10pt' }}
             >
-               By:  {idNamePair.userName}
+               By:  <Button onClick = {handleSearch}>{idNamePair.userName}</Button>
                <br/>
                {pubDate}
                <br/>
