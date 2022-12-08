@@ -100,7 +100,7 @@ export default function AppBanner() {
                         component="div"
                         sx={{ display: { xs: 'none', sm: 'block' } }}                        
                     >
-                        <Link style={{ textDecoration: 'none', color: 'white' }} onClick = {store.clearTransactions} to='/'>⌂</Link>
+                        <Link style={{ textDecoration: 'none', color: 'white' }} onClick = {store.clearTransactions} to='/'>Playlister</Link>
                     </Typography>
                     <Box sx={{ flexGrow: 1 }}></Box>
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>

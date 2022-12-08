@@ -129,6 +129,19 @@ const HomeScreen = () => {
         store.clearAllTransactions();
     }
 
+    let highlightHome = ""
+    let highlightName = ""
+    let highlightUser = ""
+
+    if (page == "home"){
+        highlightHome = {color: "black"};
+    }else if(page == "SearchByName"){
+        highlightName = {color: "black"};
+    }else if(page == "SearchByName"){
+        highlightUser = {color: "black"};
+    }
+
+
     const styleForButton = {
         width: '45px',
         height: '45px',
@@ -189,17 +202,23 @@ const HomeScreen = () => {
                         <IconButton
                             onClick = {handleHome}
                         >
-                            <HomeIcon style={styleForButton}></HomeIcon>
+                            <HomeIcon 
+                            sx = {highlightHome}
+                            style={styleForButton}></HomeIcon>
                         </IconButton>
                         <IconButton
                             onClick = {handleSearchByName}
                         >
-                            <Groups2Icon style={styleForButton}></Groups2Icon>
+                            <Groups2Icon 
+                            sx = {highlightName}
+                            style={styleForButton} ></Groups2Icon>
                         </IconButton>
                         <IconButton
                             onClick = {handleSearchByUser}
                         >
-                            <PersonIcon style={styleForButton}></PersonIcon>
+                            <PersonIcon 
+                            sx = {highlightUser}
+                            style={styleForButton}></PersonIcon>
                         </IconButton>
                         
                     </Box>
