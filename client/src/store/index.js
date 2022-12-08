@@ -635,9 +635,9 @@ function GlobalStoreContextProvider(props) {
 
                 async function asyncUpdateList(id) {
                     const response = await api.updatePlaylistById(id, playlist);
-                    if (response.data.success) {
-                        store.setCurrentList(id)
-                    }
+                    // if (response.data.success) {
+                    //     store.setCurrentList(id)
+                    // }
                 }
                 asyncUpdateList(id);
             }
