@@ -64,7 +64,9 @@ function Comments() {
                 {context}   
             </List>
             
-            <Box>
+            <Box
+                disabled = {auth.user.userName == "guest"}
+            >
                 <TextField
                         margin="normal"
                         size="small"
@@ -72,14 +74,14 @@ function Comments() {
                         label="comment"
                         name="comment"
                         autoComplete="comment"
+                        disabled = {auth.user.userName == "guest"}
                         onChange={handleUpdateText}
                         onKeyPress={handleKeyPress}
                         sx={{width: '75%', height: '10%', left: '0%'}}
                         autoFocus
                     />
                     <IconButton
-
-                        disabled = {!store.currentList || !store.currentList.pubDate}
+                        disabled = {auth.user.userName == "guest" || !store.currentList || !store.currentList.pubDate}
                         sx={{transform:"translate(20%, 30%)"}}
                         onClick = {handleClick}
                     >Post</IconButton>

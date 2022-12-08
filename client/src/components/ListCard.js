@@ -41,7 +41,7 @@ function ListCard(props) {
             console.log("load " + event.target.id);
             // CHANGE THE CURRENT LIST
             store.setCurrentList(id);
-            store.addListens(idNamePair._id)
+            // store.addListens(idNamePair._id)
         }
     }
 
@@ -123,6 +123,7 @@ function ListCard(props) {
         likesDislike = <Box sx={{ display: 'flex', "flexDirection": "row", transform:"translate(0%, -10%)"}}>
                             <Box>
                                 <IconButton
+                                    disabled = {auth.user.userName == "guest"}
                                     onClick={handlelikes}
                                 >
                                     <ThumbUpIcon/>
@@ -131,6 +132,7 @@ function ListCard(props) {
                             </Box>
                             <Box>
                                 <IconButton
+                                    disabled = {auth.user.userName == "guest"}
                                     onClick={handleDislikes}
                                 >
                                     <ThumbDownIcon/>

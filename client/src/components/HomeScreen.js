@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { GlobalStoreContext } from '../store'
+import AuthContext from '../auth';
 import ListCard from './ListCard.js'
 import MUIDeleteModal from './MUIDeleteModal'
 
@@ -33,6 +34,7 @@ import Comments from './Comments';
 */
 const HomeScreen = () => {
     const { store } = useContext(GlobalStoreContext);
+    const { auth } = useContext(AuthContext);
     const [anchorEl, setAnchorEl] = useState(null);
     const [value, setValue] = useState('videoPlayer')
     const [text, setText] = useState("")
@@ -137,7 +139,7 @@ const HomeScreen = () => {
         highlightHome = {color: "black"};
     }else if(page == "SearchByName"){
         highlightName = {color: "black"};
-    }else if(page == "SearchByName"){
+    }else if(page == "SearchByUser"){
         highlightUser = {color: "black"};
     }
 
@@ -187,6 +189,17 @@ const HomeScreen = () => {
             </List>;
     }
 
+    let user = ""
+
+    if (auth.user.userName != "guest"){
+        user = <IconButton
+                            onClick = {handleHome}
+                        >
+                            <HomeIcon 
+                            sx = {highlightHome}
+                            style={styleForButton}></HomeIcon>
+                        </IconButton>
+    }
     return (
         <Box 
             id="playlist-selector"
@@ -199,13 +212,14 @@ const HomeScreen = () => {
                 <Box id="tool-bar"
                     sx={{width: '100%'}}>
                     <Box id="toolbar-button" sx={{transform:"translate(0%, 20%)"}}>
-                        <IconButton
+                        {user}
+                        {/* <IconButton
                             onClick = {handleHome}
                         >
                             <HomeIcon 
                             sx = {highlightHome}
                             style={styleForButton}></HomeIcon>
-                        </IconButton>
+                        </IconButton> */}
                         <IconButton
                             onClick = {handleSearchByName}
                         >
@@ -229,6 +243,7 @@ const HomeScreen = () => {
                             color="primary" 
                             aria-label="add"
                             id="add-list-button"
+                            disabled = {auth.user.userName == "guest"}
                             onClick={handleCreateNewList}
                         >
                             <AddIcon />

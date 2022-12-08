@@ -65,11 +65,14 @@ export default function YouTubePlayerExample(props) {
     // THIS FUNCTION LOADS THE CURRENT SONG INTO
     // THE PLAYER AND PLAYS IT
     function loadAndPlayCurrentSong(player) {
-        if(currentSong > playlist.length || currentSong < 0 ){
+        if(currentSong > playlist.length || currentSong <= 0 ){
             setCurrentSong(0)
         }
         let song = playlist[currentSong];
         if(store.currentList != null){
+            if(currentSong == 0){
+            //store.addListens(store.currentList._id)
+            }
             song = store.currentList.songs[currentSong].youTubeId;
         }
         player.loadVideoById(song);
