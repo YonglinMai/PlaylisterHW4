@@ -631,7 +631,10 @@ function GlobalStoreContextProvider(props) {
             const response = await api.getPlaylistById(id);
             if (response.data.success) {
                 let playlist = response.data.playlist;
-                playlist.listens += 1;
+                if(playlist.pubDate){
+                    playlist.listens += 1;
+                }
+                
 
                 async function asyncUpdateList(id) {
                     const response = await api.updatePlaylistById(id, playlist);
