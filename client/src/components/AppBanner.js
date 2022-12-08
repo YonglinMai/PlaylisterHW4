@@ -35,7 +35,7 @@ export default function AppBanner() {
     }
 
     const handleGuest = () => {
-        auth.loginUser("guest", "12345678");
+        //auth.loginUser("guest", "12345678");
     }
 
     const menuId = 'primary-search-account-menu';
